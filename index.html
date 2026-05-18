@@ -15,10 +15,14 @@
       --accent-dark: #1d4ed8;
       --ok-bg: #ecfdf5;
       --ok-border: #10b981;
+      --ok-text: #065f46;
       --bad-bg: #fef2f2;
       --bad-border: #ef4444;
+      --bad-text: #991b1b;
       --warn-bg: #fffbeb;
       --warn-border: #f59e0b;
+      --fixed-bg: #eff6ff;
+      --fixed-border: #93c5fd;
     }
 
     * { box-sizing: border-box; }
@@ -35,7 +39,7 @@
     }
 
     .card {
-      width: min(980px, 100%);
+      width: min(1100px, 100%);
       background: var(--card);
       border: 1px solid #e5e7eb;
       border-radius: 18px;
@@ -47,6 +51,11 @@
       margin: 0 0 8px;
       font-size: clamp(24px, 4vw, 34px);
       line-height: 1.15;
+    }
+
+    h2 {
+      margin: 26px 0 10px;
+      font-size: 1.18rem;
     }
 
     .subtitle {
@@ -70,18 +79,24 @@
 
     select,
     textarea,
-    button {
-      width: 100%;
+    button,
+    input[type="number"] {
       font: inherit;
       border-radius: 12px;
     }
 
     select,
-    textarea {
+    textarea,
+    input[type="number"] {
       border: 1px solid var(--border);
       padding: 12px 14px;
       background: #fff;
       color: var(--text);
+    }
+
+    select,
+    textarea {
+      width: 100%;
     }
 
     textarea {
@@ -91,9 +106,21 @@
     }
 
     select:focus,
-    textarea:focus {
+    textarea:focus,
+    input[type="number"]:focus {
       outline: 3px solid rgba(37, 99, 235, 0.16);
       border-color: var(--accent);
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      appearance: textfield;
+      -moz-appearance: textfield;
     }
 
     .button-row {
@@ -113,6 +140,8 @@
       cursor: pointer;
       transition: background 0.15s ease, transform 0.05s ease;
     }
+
+    #generateBtn { width: 100%; }
 
     button:hover { background: var(--accent-dark); }
     button:active { transform: translateY(1px); }
@@ -138,11 +167,13 @@
     .notice.ok {
       background: var(--ok-bg);
       border-color: var(--ok-border);
+      color: var(--ok-text);
     }
 
     .notice.bad {
       background: var(--bad-bg);
       border-color: var(--bad-border);
+      color: var(--bad-text);
     }
 
     .notice.warn {
@@ -162,6 +193,18 @@
       border-radius: 14px;
       padding: 14px;
       background: #fafafa;
+      min-height: 104px;
+    }
+
+    .summary-box.pass {
+      background: var(--ok-bg);
+      border-color: var(--ok-border);
+    }
+
+    .summary-box.fail {
+      background: var(--bad-bg);
+      border-color: var(--bad-border);
+      color: var(--bad-text);
     }
 
     .summary-box .big {
@@ -170,12 +213,22 @@
       margin-top: 4px;
     }
 
+    .summary-detail {
+      color: inherit;
+      line-height: 1.45;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 14px;
+      border-radius: 12px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 14px;
-      overflow: hidden;
-      border-radius: 12px;
+      min-width: 860px;
     }
 
     th,
@@ -183,7 +236,7 @@
       border: 1px solid #e5e7eb;
       padding: 10px 12px;
       text-align: left;
-      vertical-align: top;
+      vertical-align: middle;
     }
 
     th {
@@ -193,13 +246,100 @@
 
     tr:nth-child(even) td { background: #fbfbfd; }
 
+    tr.fixed-row td {
+      background: var(--fixed-bg) !important;
+    }
+
+    tr.invalid td {
+      background: var(--bad-bg) !important;
+      color: var(--bad-text);
+    }
+
+    .cutoff-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .cutoff-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 170px;
+    }
+
+    .adjust-btn {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border-radius: 10px;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .cutoff-input {
+      width: 84px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    .cutoff-input.invalid {
+      border-color: var(--bad-border);
+      background: var(--bad-bg);
+      color: var(--bad-text);
+      outline-color: rgba(239, 68, 68, 0.22);
+    }
+
+    .fix-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      color: var(--muted);
+      background: #fff;
+      font-size: 0.88rem;
+      font-weight: 800;
+      line-height: 1;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .fix-control.fixed-active {
+      color: var(--accent-dark);
+      border-color: var(--fixed-border);
+      background: var(--fixed-bg);
+    }
+
+    .fix-checkbox {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .dash {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .issue-note {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.82rem;
+      color: var(--bad-text);
+      line-height: 1.35;
+    }
+
     code {
       background: #f3f4f6;
       border-radius: 6px;
       padding: 2px 5px;
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 760px) {
       .card { padding: 20px; }
       .form-line,
       .button-row {
@@ -208,6 +348,7 @@
       }
       label { padding-top: 0; }
       .summary-grid { grid-template-columns: 1fr; }
+      table { min-width: 820px; }
     }
   </style>
 </head>
@@ -215,7 +356,7 @@
   <main class="card">
     <h1>Grade Cutoff Generator</h1>
     <p class="subtitle">
-      Enter the class scores, then generate one feasible set of integer grade cutoffs satisfying the percentage and spacing constraints.
+      Enter the class scores, then generate one feasible set of integer grade cutoffs. After generation, adjust any cutoff, tick <strong>Fix</strong> beside cutoffs you want to lock, and click <strong>Generate</strong> again to search for a feasible assignment with those fixed values.
     </p>
 
     <div class="form-line">
@@ -223,8 +364,8 @@
       <div>
         <select id="courseType" aria-label="Course type">
           <option value="">Select a course type</option>
-          <option value="Undergraduate Course">Undergraduate Course</option>
-          <option value="Graduate Course">Graduate Course</option>
+          <option value="Undergraduate Course (1k-4k, &gt;50)">Undergraduate Course (1k-4k, &gt;50)</option>
+          <option value="Graduate Course (to be developed)">Graduate Course (to be developed)</option>
         </select>
       </div>
     </div>
@@ -247,18 +388,19 @@
 
   <script>
     const gradeOrder = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "D+", "D", "F"];
+    const cutoffGrades = gradeOrder.filter(grade => grade !== "F");
+    const gradeIndex = Object.fromEntries(cutoffGrades.map((grade, index) => [grade, index]));
+    let activeState = null;
 
     document.getElementById("generateBtn").addEventListener("click", generateCutoffs);
 
     function generateCutoffs() {
-      const result = document.getElementById("result");
-      result.innerHTML = "";
-
+      const existingState = collectCurrentTableState();
       const courseType = document.getElementById("courseType").value;
       const rawScores = document.getElementById("scoresInput").value;
 
       if (!courseType) {
-        showError("Please select Undergraduate Course or Graduate Course.");
+        showError("Please select a course type.");
         return;
       }
 
@@ -269,14 +411,99 @@
       }
 
       const scores = parsed.scores;
-      const solution = findFeasibleSolution(scores);
+      const fixedValidation = validateFixedInputValues(existingState.fixedCutoffs);
 
-      if (!solution) {
-        renderImpossible(scores, courseType);
+      if (!fixedValidation.ok) {
+        if (existingState.hasTable) {
+          activeState = {
+            scores,
+            courseType,
+            cutoffs: { ...existingState.allCutoffs },
+            fixedGrades: { ...existingState.fixedGrades },
+            searchNotice: {
+              className: "bad",
+              html: `<strong>Cannot regenerate with the selected fixed cutoffs.</strong> ${fixedValidation.messages.join(" ")}`
+            }
+          };
+          renderInteractiveSolution(activeState);
+          updateDashboard();
+        } else {
+          showError(fixedValidation.messages.join(" "));
+        }
         return;
       }
 
-      renderSolution(scores, courseType, solution);
+      const solution = findFeasibleSolution(scores, existingState.fixedCutoffs);
+
+      if (!solution) {
+        if (existingState.hasTable && Object.keys(existingState.fixedCutoffs).length > 0) {
+          activeState = {
+            scores,
+            courseType,
+            cutoffs: { ...existingState.allCutoffs },
+            fixedGrades: { ...existingState.fixedGrades },
+            searchNotice: {
+              className: "bad",
+              html: `<strong>Impossible with the selected fixed cutoffs.</strong> No feasible assignment satisfies all requirements while keeping ${formatFixedCutoffs(existingState.fixedCutoffs)}.`
+            }
+          };
+          renderInteractiveSolution(activeState);
+          updateDashboard();
+        } else {
+          activeState = null;
+          renderImpossible(scores, courseType, existingState.fixedCutoffs);
+        }
+        return;
+      }
+
+      activeState = {
+        scores,
+        courseType,
+        cutoffs: { ...solution.cutoffs },
+        fixedGrades: { ...existingState.fixedGrades },
+        searchNotice: Object.keys(existingState.fixedCutoffs).length > 0
+          ? {
+              className: "ok",
+              html: `<strong>Feasible assignment found with the selected fixed cutoffs.</strong> Kept ${formatFixedCutoffs(existingState.fixedCutoffs)}.`
+            }
+          : null
+      };
+
+      renderInteractiveSolution(activeState);
+      updateDashboard();
+    }
+
+    function collectCurrentTableState() {
+      const allCutoffs = {};
+      const fixedGrades = {};
+      const fixedCutoffs = {};
+      let hasTable = false;
+
+      for (const grade of cutoffGrades) {
+        const input = document.getElementById(inputId(grade));
+        const checkbox = document.getElementById(fixId(grade));
+        if (!input) continue;
+
+        hasTable = true;
+        allCutoffs[grade] = parseCutoffInput(input.value);
+
+        if (checkbox && checkbox.checked) {
+          fixedGrades[grade] = true;
+          fixedCutoffs[grade] = allCutoffs[grade];
+        }
+      }
+
+      return { hasTable, allCutoffs, fixedGrades, fixedCutoffs };
+    }
+
+    function validateFixedInputValues(fixedCutoffs) {
+      const messages = [];
+      for (const [grade, value] of Object.entries(fixedCutoffs)) {
+        if (!Number.isInteger(value) || value < 0 || value > 100) {
+          messages.push(`${escapeHtml(grade)} is fixed at an invalid value. Fixed cutoffs must be integers from 0 to 100.`);
+        }
+      }
+      return { ok: messages.length === 0, messages };
     }
 
     function parseScores(text) {
@@ -301,15 +528,19 @@
       return { ok: true, scores };
     }
 
-    function findFeasibleSolution(scores) {
+    function findFeasibleSolution(scores, fixedCutoffs = {}) {
       const n = scores.length;
-      const candidates = [];
+      let best = null;
+      const aMinusCandidates = hasOwn(fixedCutoffs, "A-") ? [fixedCutoffs["A-"]] : integerRange(0, 100);
+      const bMinusCandidates = hasOwn(fixedCutoffs, "B-") ? [fixedCutoffs["B-"]] : integerRange(0, 100);
 
-      // A- is the boundary between the A group and B group.
-      // B- is the boundary between the B group and lower group.
-      // The remaining grade cutoffs are filled in after these two boundaries are chosen.
-      for (let aMinus = 0; aMinus <= 94; aMinus++) {
-        for (let bMinus = 42; bMinus <= aMinus - 9; bMinus++) {
+      for (const aMinus of aMinusCandidates) {
+        if (!Number.isInteger(aMinus) || aMinus < 0 || aMinus > 100) continue;
+
+        for (const bMinus of bMinusCandidates) {
+          if (!Number.isInteger(bMinus) || bMinus < 0 || bMinus > 100) continue;
+          if (bMinus > aMinus - 9) continue;
+
           const aCount = scores.filter(score => score >= aMinus).length;
           const bCount = scores.filter(score => score >= bMinus && score < aMinus).length;
           const lowerCount = n - aCount - bCount;
@@ -318,36 +549,118 @@
           if (!withinPercent(bCount, n, 40, 75)) continue;
           if (!withinPercent(lowerCount, n, 0, 15)) continue;
 
-          const cutoffs = buildCutoffs(aMinus, bMinus);
+          const cutoffs = constructCutoffsWithFixedValues(aMinus, bMinus, fixedCutoffs);
           if (!cutoffs) continue;
+
+          const validation = validateCutoffsAndDistribution(scores, cutoffs);
+          if (!validation.allPass || !respectsFixedCutoffs(cutoffs, fixedCutoffs)) continue;
 
           const aPct = percent(aCount, n);
           const bPct = percent(bCount, n);
           const lowerPct = percent(lowerCount, n);
-
-          // Prefer percentages near the midpoints of the requested bands.
-          // Tie-breakers prefer conventional-looking thresholds without affecting feasibility.
           const objective =
             Math.abs(aPct - 35) +
             Math.abs(bPct - 57.5) +
             Math.abs(lowerPct - 7.5) +
             0.01 * Math.abs(aMinus - 70) +
-            0.01 * Math.abs(bMinus - 50);
+            0.01 * Math.abs(bMinus - 50) +
+            0.001 * cutoffShapePenalty(cutoffs);
 
-          candidates.push({
-            cutoffs,
-            counts: { aCount, bCount, lowerCount },
-            percentages: { aPct, bPct, lowerPct },
-            objective
-          });
+          if (!best || objective < best.objective) {
+            best = {
+              cutoffs,
+              counts: { aCount, bCount, lowerCount },
+              percentages: { aPct, bPct, lowerPct },
+              objective
+            };
+          }
         }
       }
 
-      candidates.sort((x, y) => x.objective - y.objective);
-      return candidates[0] || null;
+      return best;
     }
 
-    function buildCutoffs(aMinus, bMinus) {
+    function constructCutoffsWithFixedValues(aMinus, bMinus, fixedCutoffs) {
+      const lows = Array(cutoffGrades.length).fill(0);
+      const highs = Array(cutoffGrades.length).fill(100);
+      lows[gradeIndex["D"]] = 30;
+
+      for (const [grade, value] of Object.entries(fixedCutoffs)) {
+        if (!setExactCutoff(lows, highs, grade, value)) return null;
+      }
+      if (!setExactCutoff(lows, highs, "A-", aMinus)) return null;
+      if (!setExactCutoff(lows, highs, "B-", bMinus)) return null;
+      if (!propagateCutoffBounds(lows, highs)) return null;
+
+      const preferred = preferredCutoffs(aMinus, bMinus, fixedCutoffs);
+      const values = [];
+
+      for (let i = 0; i < cutoffGrades.length; i++) {
+        const grade = cutoffGrades[i];
+        const lower = lows[i];
+        const upper = i === 0 ? highs[i] : Math.min(highs[i], values[i - 1] - 3);
+
+        if (lower > upper) return null;
+
+        const target = Number.isFinite(preferred[grade]) ? preferred[grade] : Math.floor((lower + upper) / 2);
+        values[i] = clamp(Math.round(target), lower, upper);
+      }
+
+      const cutoffs = Object.fromEntries(cutoffGrades.map((grade, index) => [grade, values[index]]));
+      return validCutoffs(cutoffs) && respectsFixedCutoffs(cutoffs, fixedCutoffs) ? cutoffs : null;
+    }
+
+    function setExactCutoff(lows, highs, grade, value) {
+      if (!(grade in gradeIndex)) return false;
+      if (!Number.isInteger(value) || value < 0 || value > 100) return false;
+
+      const index = gradeIndex[grade];
+      lows[index] = Math.max(lows[index], value);
+      highs[index] = Math.min(highs[index], value);
+      return lows[index] <= highs[index];
+    }
+
+    function propagateCutoffBounds(lows, highs) {
+      let changed = true;
+
+      while (changed) {
+        changed = false;
+
+        for (let i = cutoffGrades.length - 2; i >= 0; i--) {
+          const requiredLow = lows[i + 1] + 3;
+          if (lows[i] < requiredLow) {
+            lows[i] = requiredLow;
+            changed = true;
+          }
+        }
+
+        for (let i = 0; i < cutoffGrades.length - 1; i++) {
+          const allowedHigh = highs[i] - 3;
+          if (highs[i + 1] > allowedHigh) {
+            highs[i + 1] = allowedHigh;
+            changed = true;
+          }
+        }
+
+        for (let i = 0; i < cutoffGrades.length; i++) {
+          if (lows[i] > highs[i]) return false;
+        }
+      }
+
+      return true;
+    }
+
+    function preferredCutoffs(aMinus, bMinus, fixedCutoffs) {
+      const balanced = buildBalancedCutoffs(aMinus, bMinus) || {};
+      return {
+        ...balanced,
+        "A-": aMinus,
+        "B-": bMinus,
+        ...fixedCutoffs
+      };
+    }
+
+    function buildBalancedCutoffs(aMinus, bMinus) {
       const topGaps = balancedGaps(100 - aMinus, [3, 3, 0]);
       const middleGaps = balancedGaps(aMinus - bMinus, [3, 3, 3]);
       const lowerGaps = balancedGaps(bMinus - 30, [3, 3, 3, 3]);
@@ -356,10 +669,8 @@
 
       const a = aMinus + topGaps[0];
       const aPlus = a + topGaps[1];
-
       const b = bMinus + middleGaps[0];
       const bPlus = b + middleGaps[1];
-
       const d = 30;
       const dPlus = d + lowerGaps[0];
       const c = dPlus + lowerGaps[1];
@@ -401,11 +712,7 @@
     }
 
     function validCutoffs(cutoffs) {
-      const orderedCutoffs = [
-        cutoffs["A+"], cutoffs["A"], cutoffs["A-"],
-        cutoffs["B+"], cutoffs["B"], cutoffs["B-"],
-        cutoffs["C+"], cutoffs["C"], cutoffs["D+"], cutoffs["D"]
-      ];
+      const orderedCutoffs = cutoffGrades.map(grade => cutoffs[grade]);
 
       if (cutoffs["D"] < 30) return false;
       if (orderedCutoffs.some(value => !Number.isInteger(value) || value < 0 || value > 100)) return false;
@@ -415,6 +722,21 @@
       }
 
       return true;
+    }
+
+    function respectsFixedCutoffs(cutoffs, fixedCutoffs) {
+      for (const [grade, value] of Object.entries(fixedCutoffs)) {
+        if (cutoffs[grade] !== value) return false;
+      }
+      return true;
+    }
+
+    function cutoffShapePenalty(cutoffs) {
+      let penalty = 0;
+      for (let i = 0; i < cutoffGrades.length - 1; i++) {
+        penalty += Math.abs((cutoffs[cutoffGrades[i]] - cutoffs[cutoffGrades[i + 1]]) - 6);
+      }
+      return penalty;
     }
 
     function classify(score, cutoffs) {
@@ -438,91 +760,337 @@
     }
 
     function gradeRange(grade, cutoffs) {
+      const value = cutoff => formatCutoffValue(cutoffs[cutoff]);
       switch (grade) {
-        case "A+": return `≥ ${cutoffs["A+"]}`;
-        case "A": return `${cutoffs["A"]} to < ${cutoffs["A+"]}`;
-        case "A-": return `${cutoffs["A-"]} to < ${cutoffs["A"]}`;
-        case "B+": return `${cutoffs["B+"]} to < ${cutoffs["A-"]}`;
-        case "B": return `${cutoffs["B"]} to < ${cutoffs["B+"]}`;
-        case "B-": return `${cutoffs["B-"]} to < ${cutoffs["B"]}`;
-        case "C+": return `${cutoffs["C+"]} to < ${cutoffs["B-"]}`;
-        case "C": return `${cutoffs["C"]} to < ${cutoffs["C+"]}`;
-        case "D+": return `${cutoffs["D+"]} to < ${cutoffs["C"]}`;
-        case "D": return `${cutoffs["D"]} to < ${cutoffs["D+"]}`;
-        case "F": return `< ${cutoffs["D"]}`;
+        case "A+": return `≥ ${value("A+")}`;
+        case "A": return `${value("A")} to < ${value("A+")}`;
+        case "A-": return `${value("A-")} to < ${value("A")}`;
+        case "B+": return `${value("B+")} to < ${value("A-")}`;
+        case "B": return `${value("B")} to < ${value("B+")}`;
+        case "B-": return `${value("B-")} to < ${value("B")}`;
+        case "C+": return `${value("C+")} to < ${value("B-")}`;
+        case "C": return `${value("C")} to < ${value("C+")}`;
+        case "D+": return `${value("D+")} to < ${value("C")}`;
+        case "D": return `${value("D")} to < ${value("D+")}`;
+        case "F": return `< ${value("D")}`;
         default: return "";
       }
     }
 
-    function renderSolution(scores, courseType, solution) {
+    function renderInteractiveSolution(state) {
       const result = document.getElementById("result");
-      const { cutoffs, counts, percentages } = solution;
-      const perGradeCounts = gradeCounts(scores, cutoffs);
+      const { scores, courseType, cutoffs } = state;
+      const fixedGrades = state.fixedGrades || {};
       const n = scores.length;
+      const aRange = countRange(n, 25, 45);
+      const bRange = countRange(n, 40, 75);
+      const lowerRange = countRange(n, 0, 15);
+      const searchNoticeHtml = state.searchNotice
+        ? `<div class="notice ${state.searchNotice.className}">${state.searchNotice.html}</div>`
+        : "";
 
       const cutoffRows = gradeOrder.map(grade => {
-        const cutoff = grade === "F" ? "—" : cutoffs[grade];
+        const checked = fixedGrades[grade] ? "checked" : "";
+        const fixedActiveClass = fixedGrades[grade] ? " fixed-active" : "";
+        const control = grade === "F"
+          ? `<span class="dash">—</span>`
+          : `
+            <div class="cutoff-cell">
+              <div class="cutoff-control">
+                <button class="adjust-btn" type="button" data-grade="${escapeHtml(grade)}" data-delta="-1" aria-label="Decrease cutoff for ${escapeHtml(grade)}">−</button>
+                <input
+                  class="cutoff-input"
+                  id="${inputId(grade)}"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="1"
+                  inputmode="numeric"
+                  value="${formatInputValue(cutoffs[grade])}"
+                  data-grade="${escapeHtml(grade)}"
+                  aria-label="Cutoff for ${escapeHtml(grade)}"
+                />
+                <button class="adjust-btn" type="button" data-grade="${escapeHtml(grade)}" data-delta="1" aria-label="Increase cutoff for ${escapeHtml(grade)}">+</button>
+              </div>
+              <label class="fix-control${fixedActiveClass}" for="${fixId(grade)}" title="Keep this cutoff fixed during the next Generate search">
+                <input
+                  class="fix-checkbox"
+                  id="${fixId(grade)}"
+                  type="checkbox"
+                  data-grade="${escapeHtml(grade)}"
+                  ${checked}
+                />
+                Fix
+              </label>
+            </div>
+            <span class="issue-note" id="issue-${gradeKey(grade)}"></span>
+          `;
+
         return `
-          <tr>
+          <tr id="row-${gradeKey(grade)}">
             <td><strong>${grade}</strong></td>
-            <td>${cutoff}</td>
-            <td>${gradeRange(grade, cutoffs)}</td>
-            <td>${perGradeCounts[grade]}</td>
-            <td>${formatPercent(percent(perGradeCounts[grade], n))}</td>
+            <td>${control}</td>
+            <td id="range-${gradeKey(grade)}"></td>
+            <td id="count-${gradeKey(grade)}"></td>
+            <td id="percent-${gradeKey(grade)}"></td>
           </tr>
         `;
       }).join("");
 
       result.innerHTML = `
-        <div class="notice ok">
-          <strong>Feasible cutoffs found for ${escapeHtml(courseType)}.</strong>
-          The cutoffs are integer-valued, D is at least 30, and each consecutive cutoff differs by at least 3 marks.
-        </div>
+        <div id="searchNotice">${searchNoticeHtml}</div>
+        <div id="overallNotice" class="notice ok"></div>
 
+        <h2>Distribution requirements</h2>
         <div class="summary-grid">
-          <div class="summary-box">
-            <div>A group: A+, A, A−</div>
-            <div class="big">${counts.aCount}/${n} = ${formatPercent(percentages.aPct)}</div>
-            <div>Required: 25% to 45%</div>
+          <div class="summary-box" id="summary-a">
+            <div><strong>A group:</strong> A+, A, A−</div>
+            <div class="big" id="summary-a-value"></div>
+            <div class="summary-detail" id="summary-a-detail">Required: 25% to 45%, i.e. ${aRange[0]} to ${aRange[1]} of ${n}</div>
           </div>
-          <div class="summary-box">
-            <div>B group: B+, B, B−</div>
-            <div class="big">${counts.bCount}/${n} = ${formatPercent(percentages.bPct)}</div>
-            <div>Required: 40% to 75%</div>
+          <div class="summary-box" id="summary-b">
+            <div><strong>B group:</strong> B+, B, B−</div>
+            <div class="big" id="summary-b-value"></div>
+            <div class="summary-detail" id="summary-b-detail">Required: 40% to 75%, i.e. ${bRange[0]} to ${bRange[1]} of ${n}</div>
           </div>
-          <div class="summary-box">
-            <div>Lower group: C+ to F</div>
-            <div class="big">${counts.lowerCount}/${n} = ${formatPercent(percentages.lowerPct)}</div>
-            <div>Required: 0% to 15%</div>
+          <div class="summary-box" id="summary-lower">
+            <div><strong>Lower group:</strong> C+, C, D+, D, F</div>
+            <div class="big" id="summary-lower-value"></div>
+            <div class="summary-detail" id="summary-lower-detail">Required: 0% to 15%, i.e. ${lowerRange[0]} to ${lowerRange[1]} of ${n}</div>
           </div>
         </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Grade</th>
-              <th>Cutoff mark</th>
-              <th>Score range</th>
-              <th>Count</th>
-              <th>Percent</th>
-            </tr>
-          </thead>
-          <tbody>${cutoffRows}</tbody>
-        </table>
+        <div class="notice warn">
+          <strong>Manual adjustment enabled.</strong>
+          Use the left/right minus/plus buttons or type an integer cutoff directly. Tick <strong>Fix</strong> beside any cutoff you want to keep, then click <strong>Generate</strong> again to search around the fixed values.
+        </div>
+
+        <h2 id="cutoffHeading">Editable grade cutoffs for ${escapeHtml(courseType)}</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Grade</th>
+                <th>Cutoff mark / fixed?</th>
+                <th>Score range</th>
+                <th>Count</th>
+                <th>Percent</th>
+              </tr>
+            </thead>
+            <tbody>${cutoffRows}</tbody>
+          </table>
+        </div>
       `;
+
+      document.querySelectorAll("#result .cutoff-input").forEach(input => {
+        input.addEventListener("input", handleManualChange);
+      });
+
+      document.querySelectorAll("#result .adjust-btn").forEach(button => {
+        button.addEventListener("click", () => {
+          const grade = button.dataset.grade;
+          const delta = Number(button.dataset.delta);
+          const input = document.getElementById(inputId(grade));
+          const current = parseCutoffInput(input.value);
+          const next = Number.isFinite(current) ? current + delta : delta;
+          input.value = Math.max(0, Math.min(100, next));
+          handleManualChange();
+        });
+      });
+
+      document.querySelectorAll("#result .fix-checkbox").forEach(checkbox => {
+        checkbox.addEventListener("change", handleManualChange);
+      });
     }
 
-    function renderImpossible(scores, courseType) {
+    function handleManualChange() {
+      if (activeState) activeState.searchNotice = null;
+      const searchNotice = document.getElementById("searchNotice");
+      if (searchNotice) searchNotice.innerHTML = "";
+      updateDashboard();
+    }
+
+    function updateDashboard() {
+      if (!activeState) return;
+
+      const { scores, courseType } = activeState;
+      const n = scores.length;
+      const cutoffs = currentCutoffsFromInputs();
+      activeState.cutoffs = cutoffs;
+      activeState.fixedGrades = currentFixedGradesFromInputs();
+
+      const heading = document.getElementById("cutoffHeading");
+      if (heading) heading.textContent = `Editable grade cutoffs for ${courseType}`;
+
+      const validation = validateCutoffsAndDistribution(scores, cutoffs);
+      const perGradeCounts = gradeCounts(scores, cutoffs);
+
+      setOverallNotice(validation.allPass, courseType);
+      updateSummary("a", validation.groups.a, 25, 45, n);
+      updateSummary("b", validation.groups.b, 40, 75, n);
+      updateSummary("lower", validation.groups.lower, 0, 15, n);
+      updateGradeRows(perGradeCounts, cutoffs, validation, n);
+    }
+
+    function currentCutoffsFromInputs() {
+      const cutoffs = {};
+      for (const grade of cutoffGrades) {
+        const input = document.getElementById(inputId(grade));
+        cutoffs[grade] = input ? parseCutoffInput(input.value) : NaN;
+      }
+      return cutoffs;
+    }
+
+    function currentFixedGradesFromInputs() {
+      const fixedGrades = {};
+      for (const grade of cutoffGrades) {
+        const checkbox = document.getElementById(fixId(grade));
+        if (checkbox && checkbox.checked) fixedGrades[grade] = true;
+      }
+      return fixedGrades;
+    }
+
+    function validateCutoffsAndDistribution(scores, cutoffs) {
+      const n = scores.length;
+      const issuesByGrade = Object.fromEntries(cutoffGrades.map(grade => [grade, []]));
+      const orderedCutoffs = cutoffGrades.map(grade => cutoffs[grade]);
+
+      let integerRangePass = true;
+      for (const grade of cutoffGrades) {
+        const value = cutoffs[grade];
+        if (!Number.isInteger(value) || value < 0 || value > 100) {
+          integerRangePass = false;
+          issuesByGrade[grade].push("Must be an integer from 0 to 100.");
+        }
+      }
+
+      const dPass = Number.isFinite(cutoffs["D"]) && cutoffs["D"] >= 30;
+      if (!dPass) issuesByGrade["D"].push("D cutoff must be at least 30.");
+
+      let spacingPass = true;
+      const badGaps = [];
+      for (let i = 0; i < cutoffGrades.length - 1; i++) {
+        const upperGrade = cutoffGrades[i];
+        const lowerGrade = cutoffGrades[i + 1];
+        const upperValue = cutoffs[upperGrade];
+        const lowerValue = cutoffs[lowerGrade];
+        const gap = upperValue - lowerValue;
+
+        if (!Number.isFinite(gap) || gap < 3) {
+          spacingPass = false;
+          badGaps.push(`${upperGrade} − ${lowerGrade} = ${formatGap(gap)}`);
+          issuesByGrade[upperGrade].push(`Gap to ${lowerGrade} must be at least 3.`);
+          issuesByGrade[lowerGrade].push(`Gap from ${upperGrade} must be at least 3.`);
+        }
+      }
+
+      const counts = gradeCounts(scores, cutoffs);
+      const aCount = counts["A+"] + counts["A"] + counts["A-"];
+      const bCount = counts["B+"] + counts["B"] + counts["B-"];
+      const lowerCount = counts["C+"] + counts["C"] + counts["D+"] + counts["D"] + counts["F"];
+
+      const groups = {
+        a: {
+          count: aCount,
+          pct: percent(aCount, n),
+          pass: withinPercent(aCount, n, 25, 45),
+          label: "A+, A, A−"
+        },
+        b: {
+          count: bCount,
+          pct: percent(bCount, n),
+          pass: withinPercent(bCount, n, 40, 75),
+          label: "B+, B, B−"
+        },
+        lower: {
+          count: lowerCount,
+          pct: percent(lowerCount, n),
+          pass: withinPercent(lowerCount, n, 0, 15),
+          label: "C+, C, D+, D, F"
+        }
+      };
+
+      const allPass = integerRangePass && dPass && spacingPass && groups.a.pass && groups.b.pass && groups.lower.pass;
+
+      return {
+        allPass,
+        integerRangePass,
+        dPass,
+        spacingPass,
+        badGaps,
+        groups,
+        issuesByGrade,
+        orderedCutoffs
+      };
+    }
+
+    function setOverallNotice(allPass, courseType) {
+      const notice = document.getElementById("overallNotice");
+      notice.className = `notice ${allPass ? "ok" : "bad"}`;
+      notice.innerHTML = allPass
+        ? `<strong>Current cutoffs are feasible for ${escapeHtml(courseType)}.</strong> All distribution, cutoff, integer, and spacing requirements are satisfied.`
+        : `<strong>Current cutoffs are not feasible for ${escapeHtml(courseType)}.</strong> Failed distribution boxes and invalid cutoff rows are highlighted in red below.`;
+    }
+
+    function updateSummary(key, group, low, high, total) {
+      const box = document.getElementById(`summary-${key}`);
+      const value = document.getElementById(`summary-${key}-value`);
+      const detail = document.getElementById(`summary-${key}-detail`);
+      const range = countRange(total, low, high);
+
+      box.className = `summary-box ${group.pass ? "pass" : "fail"}`;
+      value.textContent = `${group.count}/${total} = ${formatPercent(group.pct)}`;
+      detail.textContent = `${group.pass ? "Passes" : "Fails"} required ${low}% to ${high}% (${range[0]} to ${range[1]} of ${total}).`;
+    }
+
+    function updateGradeRows(counts, cutoffs, validation, total) {
+      for (const grade of gradeOrder) {
+        const key = gradeKey(grade);
+        const row = document.getElementById(`row-${key}`);
+        const rangeCell = document.getElementById(`range-${key}`);
+        const countCell = document.getElementById(`count-${key}`);
+        const percentCell = document.getElementById(`percent-${key}`);
+
+        rangeCell.textContent = gradeRange(grade, cutoffs);
+        countCell.textContent = counts[grade];
+        percentCell.textContent = formatPercent(percent(counts[grade], total));
+
+        if (grade !== "F") {
+          const input = document.getElementById(inputId(grade));
+          const checkbox = document.getElementById(fixId(grade));
+          const label = checkbox ? checkbox.closest(".fix-control") : null;
+          const issueNote = document.getElementById(`issue-${key}`);
+          const issues = validation.issuesByGrade[grade];
+          const invalid = issues.length > 0;
+          const fixed = Boolean(checkbox && checkbox.checked);
+
+          row.classList.toggle("invalid", invalid);
+          row.classList.toggle("fixed-row", fixed && !invalid);
+          input.classList.toggle("invalid", invalid);
+          if (label) label.classList.toggle("fixed-active", fixed);
+          input.title = issues.join(" ");
+          issueNote.textContent = issues.join(" ");
+        } else {
+          row.classList.remove("invalid");
+          row.classList.remove("fixed-row");
+        }
+      }
+    }
+
+    function renderImpossible(scores, courseType, fixedCutoffs = {}) {
       const result = document.getElementById("result");
       const n = scores.length;
       const aRange = countRange(n, 25, 45);
       const bRange = countRange(n, 40, 75);
       const lowerRange = countRange(n, 0, 15);
+      const fixedText = Object.keys(fixedCutoffs).length > 0
+        ? `<br>Selected fixed cutoff values: ${formatFixedCutoffs(fixedCutoffs)}.`
+        : "";
 
       result.innerHTML = `
         <div class="notice bad">
           <strong>Impossible for ${escapeHtml(courseType)}.</strong>
-          No integer-valued cutoffs from 0 to 100 satisfy all of the percentage, D-cutoff, and 3-mark spacing constraints for these scores.
+          No integer-valued cutoffs from 0 to 100 satisfy all percentage, fixed-value, D-cutoff, and 3-mark spacing constraints for these scores.${fixedText}
         </div>
         <div class="notice warn">
           With ${n} score${n === 1 ? "" : "s"}, the required count ranges are:<br>
@@ -550,6 +1118,57 @@
 
     function formatPercent(value) {
       return `${value.toFixed(1)}%`;
+    }
+
+    function parseCutoffInput(rawValue) {
+      const trimmed = String(rawValue).trim();
+      return trimmed === "" ? NaN : Number(trimmed);
+    }
+
+    function formatCutoffValue(value) {
+      return Number.isFinite(value) ? String(value) : "invalid";
+    }
+
+    function formatInputValue(value) {
+      return Number.isFinite(value) ? String(value) : "";
+    }
+
+    function formatGap(value) {
+      return Number.isFinite(value) ? String(value) : "invalid";
+    }
+
+    function formatFixedCutoffs(fixedCutoffs) {
+      const parts = [];
+      for (const grade of cutoffGrades) {
+        if (hasOwn(fixedCutoffs, grade)) parts.push(`<code>${escapeHtml(grade)} = ${escapeHtml(formatCutoffValue(fixedCutoffs[grade]))}</code>`);
+      }
+      return parts.length ? parts.join(", ") : "none";
+    }
+
+    function gradeKey(grade) {
+      return grade.replace("+", "plus").replace("-", "minus");
+    }
+
+    function inputId(grade) {
+      return `cutoff-${gradeKey(grade)}`;
+    }
+
+    function fixId(grade) {
+      return `fix-${gradeKey(grade)}`;
+    }
+
+    function integerRange(start, endInclusive) {
+      const values = [];
+      for (let value = start; value <= endInclusive; value++) values.push(value);
+      return values;
+    }
+
+    function clamp(value, low, high) {
+      return Math.max(low, Math.min(high, value));
+    }
+
+    function hasOwn(object, key) {
+      return Object.prototype.hasOwnProperty.call(object, key);
     }
 
     function showError(message) {
